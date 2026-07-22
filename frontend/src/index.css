@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #0b0f14;
+  --surface: #12181f;
+  --surface-raised: #171f28;
+  --border: #232c37;
+  --text: #e9edf2;
+  --text-dim: #8b98a6;
+  --text-faint: #566170;
+  --amber: #ffb627;
+  --amber-dim: #8a6a24;
+  --red: #e5484d;
+  --green: #34d399;
+  --blue: #5b9dd9;
+
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(255, 182, 39, 0.06), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(91, 157, 217, 0.05), transparent 45%);
+  background-attachment: fixed;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a { color: var(--amber); }
+
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--amber);
+  color: #1a1200;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

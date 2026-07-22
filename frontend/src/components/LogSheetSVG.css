@@ -1,0 +1,127 @@
+.log-sheet {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.log-sheet__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.log-sheet__title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.log-sheet__subtitle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.log-sheet__totals {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.total-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+.total-pill__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.total-pill__label {
+  color: var(--text-dim);
+}
+
+.total-pill__value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.log-sheet__svg {
+  min-width: 900px;
+  width: 100%;
+  height: auto;
+}
+
+.log-sheet__hourlabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--text-faint);
+}
+
+.log-sheet__rowlabel {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--text-dim);
+}
+
+.log-sheet__row {
+  fill: var(--bg);
+}
+
+.log-sheet__row:nth-child(odd) {
+  fill: #0e1319;
+}
+
+.log-sheet__gridline-major {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.log-sheet__gridline-minor {
+  stroke: var(--border);
+  stroke-width: 0.5;
+  opacity: 0.5;
+}
+
+.log-sheet__dutyline {
+  stroke: var(--amber);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px rgba(255, 182, 39, 0.35));
+}
+
+.log-sheet__dutydot {
+  fill: var(--amber);
+}
+
+.log-sheet__remarks {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.log-sheet__remark-chip {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-dim);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+}

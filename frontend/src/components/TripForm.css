@@ -1,0 +1,84 @@
+.trip-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.trip-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field__index {
+  font-family: var(--font-mono);
+  color: var(--amber);
+  font-size: 11px;
+}
+
+.field input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: var(--font-display);
+  transition: border-color 0.15s ease;
+}
+
+.field input:focus {
+  border-color: var(--amber);
+  outline: none;
+}
+
+.field input::placeholder {
+  color: var(--text-faint);
+}
+
+.trip-form__submit {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--amber);
+  color: #1a1200;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.trip-form__submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.trip-form__submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.trip-form__submit:disabled {
+  background: var(--surface-raised);
+  color: var(--text-faint);
+  cursor: not-allowed;
+}

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: eld-trip-planner-api
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements-prod.txt && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn eld_backend.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: CORS_ALLOW_ALL
+        value: "True"
+      - key: PYTHON_VERSION
+        value: "3.12.0"
+    postDeployCommand: "python manage.py migrate --noinput"
+databases:
+  - name: eld-trip-planner-db
+    plan: free

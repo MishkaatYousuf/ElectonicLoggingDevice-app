@@ -1,0 +1,42 @@
+.map-view {
+  position: relative;
+  height: 480px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 1000;
+  background: rgba(11, 15, 20, 0.85);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.map-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-legend__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.leaflet-container {
+  background: var(--bg) !important;
+  font-family: var(--font-display) !important;
+}
