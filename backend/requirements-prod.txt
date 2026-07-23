@@ -1,4 +1,0 @@
-# Use this file for deployment (Render/Railway/etc.) where Postgres is used.
-# Local dev uses SQLite by default, so requirements.txt alone is enough there.
--r requirements.txt
-psycopg2-binary==2.9.9
