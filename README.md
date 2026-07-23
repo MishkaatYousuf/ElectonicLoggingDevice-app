@@ -43,8 +43,7 @@ Frontend renders:
   - One drawn ELD grid per day, amber duty line (LogSheetSVG.jsx)
 ```
 
-The HOS engine (`backend/trips/services/hos_calculator.py`) is the core of
-the assignment. It walks forward in simulated hours and applies, in order:
+The HOS engine (`backend/trips/services/hos_calculator.py`) is the core of this project. It walks forward in simulated hours and applies, in order:
 
 - 1 hr on-duty for pickup, 1 hr for drop-off
 - Max **11 hrs driving** per duty day
@@ -54,10 +53,7 @@ the assignment. It walks forward in simulated hours and applies, in order:
 - **Fuel stop** (30 min, on-duty) every 1,000 miles
 - **34-hour restart** once the 70-hr/8-day cycle is reached
 
-The result is split at midnight boundaries into individual daily logs, each
-containing duty-status segments (`OFF`, `SB`, `D`, `ON`) that the frontend
-draws as a continuous step-line on a 24-hour grid — the same shape as a
-paper ELD log.
+The result is split at midnight boundaries into individual daily logs, each containing duty-status segments (`OFF`, `SB`, `D`, `ON`) that the frontend draws as a continuous step-line on a 24-hour grid — the same shape as a paper ELD log.
 
 **"Current Cycle Used (Hrs)"** is how many on-duty hours the driver has
 already accumulated in their rolling 70-hour/8-day window *before* this
