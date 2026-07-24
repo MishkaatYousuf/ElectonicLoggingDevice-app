@@ -25,6 +25,7 @@ class StopSerializer(serializers.ModelSerializer):
         model = Stop
         fields = [
             "stop_type", "sequence", "lat", "lng", "location_label",
+            "distance_at_stop_miles",
             "trip_hour_start", "trip_hour_end", "duration_hours",
         ]
 

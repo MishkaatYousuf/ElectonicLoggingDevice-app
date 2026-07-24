@@ -36,10 +36,13 @@ class TripPlanView(APIView):
         except RoutingError as e:
             return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
 
+        pickup_leg_miles = route["leg_distances_miles"][0] if route["leg_distances_miles"] else 0.0
+
         hos_result = plan_hos(
             distance_miles=route["distance_miles"],
             driving_hours=route["duration_hours"],
             current_cycle_used=data["current_cycle_used_hours"],
+            pickup_leg_miles=pickup_leg_miles,
         )
         daily_logs = split_events_into_daily_logs(hos_result["events"])
 
@@ -69,8 +72,8 @@ class TripPlanView(APIView):
                 trip_hour_end=round(s["end"], 2),
                 duration_hours=round(s["end"] - s["start"], 2),
                 location_label=f"~mile {round(s['distance_at_stop'])}",
+                distance_at_stop_miles=round(s["distance_at_stop"], 2),
             )
-
         for day in daily_logs:
             log_sheet = LogSheet.objects.create(
                 trip=trip,

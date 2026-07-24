@@ -48,6 +48,7 @@ class Stop(models.Model):
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
     location_label = models.CharField(max_length=255, blank=True)
+    distance_at_stop_miles = models.FloatField(null=True, blank=True, default=0.0)
     trip_hour_start = models.FloatField(help_text="Hours elapsed since trip start")
     trip_hour_end = models.FloatField(help_text="Hours elapsed since trip start")
     duration_hours = models.FloatField()

@@ -14,7 +14,11 @@ class RoutingError(Exception):
 def get_route(waypoints):
     """
     waypoints: list of (lat, lng) tuples, in visiting order.
-    Returns dict with distance_miles, duration_hours, geometry (GeoJSON LineString coords [lng,lat]).
+    Returns dict with:
+      - distance_miles, duration_hours   (whole route totals)
+      - geometry                          (GeoJSON LineString coords [lng,lat])
+      - leg_distances_miles               (list, one per leg between waypoints)
+      - leg_durations_hours               (list, one per leg between waypoints)
     """
     coord_str = ";".join(f"{lng},{lat}" for lat, lng in waypoints)
     url = f"{OSRM_BASE_URL}/{coord_str}"
@@ -34,8 +38,14 @@ def get_route(waypoints):
     distance_meters = route["distance"]
     duration_seconds = route["duration"]
 
+    legs = route.get("legs", [])
+    leg_distances_miles = [leg["distance"] / 1609.34 for leg in legs]
+    leg_durations_hours = [leg["duration"] / 3600 for leg in legs]
+
     return {
         "distance_miles": distance_meters / 1609.34,
         "duration_hours": duration_seconds / 3600,
         "geometry": route["geometry"]["coordinates"],  # [[lng, lat], ...]
+        "leg_distances_miles": leg_distances_miles,
+        "leg_durations_hours": leg_durations_hours,
     }

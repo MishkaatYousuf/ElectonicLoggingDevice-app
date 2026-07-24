@@ -34,13 +34,18 @@ CYCLE_LIMIT_HOURS = 70.0
 RESTART_HOURS = 34.0
 TRIP_START_CLOCK_HOUR = 6.0  # trip assumed to begin at 6:00 AM
 
-
-def plan_hos(distance_miles: float, driving_hours: float, current_cycle_used: float):
+def plan_hos(distance_miles: float, driving_hours: float, current_cycle_used: float,
+             pickup_leg_miles: float = 0.0):
     """
     Simulate the whole trip and return:
       - events: list of {status, start, end, label} in absolute trip hours
       - stops: list of {stop_type, start, end, distance_at_stop}
       - total_trip_hours
+
+    pickup_leg_miles: distance (miles) from the driver's *current* location to
+    the *pickup* location. The driver must physically drive this leg before
+    the on-duty "Pickup" event is logged - it is not assumed to happen at
+    mile 0.
     """
     events = []
     stops = []
@@ -52,23 +57,30 @@ def plan_hos(distance_miles: float, driving_hours: float, current_cycle_used: fl
         if end > start:
             events.append({"status": status, "start": start, "end": end, "label": label})
 
-    # --- Pickup (on duty, not driving) ---
-    add_event("ON", t, t + PICKUP_DURATION_HOURS, "Pickup")
-    stops.append({
-        "stop_type": "PICKUP", "start": t, "end": t + PICKUP_DURATION_HOURS,
-        "distance_at_stop": 0,
-    })
-    t += PICKUP_DURATION_HOURS
-    cycle_used += PICKUP_DURATION_HOURS
-
     remaining_drive = driving_hours
     distance_covered = 0.0
     miles_per_hour = (distance_miles / driving_hours) if driving_hours > 0 else 50.0
     next_fuel_mark = FUEL_STOP_INTERVAL_MILES
+    pickup_visited = False
 
     window_start = t
     drive_today = 0.0
     drive_since_break = 0.0
+
+    def log_pickup():
+        nonlocal t, cycle_used, pickup_visited
+        add_event("ON", t, t + PICKUP_DURATION_HOURS, "Pickup")
+        stops.append({
+            "stop_type": "PICKUP", "start": t, "end": t + PICKUP_DURATION_HOURS,
+            "distance_at_stop": distance_covered,
+        })
+        t += PICKUP_DURATION_HOURS
+        cycle_used += PICKUP_DURATION_HOURS
+        pickup_visited = True
+
+    # Edge case: pickup location is effectively the same as current location
+    if pickup_leg_miles <= 1e-6:
+        log_pickup()
 
     safety_counter = 0
     while remaining_drive > 1e-6:
@@ -83,12 +95,19 @@ def plan_hos(distance_miles: float, driving_hours: float, current_cycle_used: fl
         miles_to_next_fuel = next_fuel_mark - distance_covered
         hours_to_next_fuel = miles_to_next_fuel / miles_per_hour if miles_per_hour > 0 else remaining_drive
 
+        if not pickup_visited:
+            miles_to_pickup = pickup_leg_miles - distance_covered
+            hours_to_pickup = miles_to_pickup / miles_per_hour if miles_per_hour > 0 else remaining_drive
+        else:
+            hours_to_pickup = remaining_drive  # no constraint
+
         chunk = min(
             remaining_drive,
             window_remaining,
             drive_cap_remaining,
             break_cap_remaining,
             hours_to_next_fuel,
+            hours_to_pickup,
         )
 
         if chunk <= 1e-6:
@@ -125,6 +144,10 @@ def plan_hos(distance_miles: float, driving_hours: float, current_cycle_used: fl
         cycle_used += chunk
         distance_covered += chunk * miles_per_hour
 
+        # Arrived at pickup?
+        if not pickup_visited and distance_covered >= pickup_leg_miles - 1e-6:
+            log_pickup()
+
         # Fuel stop check
         if distance_covered >= next_fuel_mark - 1e-6 and remaining_drive > 1e-6:
             add_event("ON", t, t + FUEL_STOP_DURATION_HOURS, "Fuel stop")
@@ -149,6 +172,11 @@ def plan_hos(distance_miles: float, driving_hours: float, current_cycle_used: fl
             drive_today = 0.0
             drive_since_break = 0.0
 
+    # Safety net: if driving_hours was 0 or extremely short and we never hit
+    # the mid-loop check above, make sure pickup still gets logged.
+    if not pickup_visited:
+        log_pickup()
+
     # --- Dropoff (on duty, not driving) ---
     add_event("ON", t, t + DROPOFF_DURATION_HOURS, "Drop-off")
     stops.append({
@@ -162,7 +190,6 @@ def plan_hos(distance_miles: float, driving_hours: float, current_cycle_used: fl
         "stops": stops,
         "total_trip_hours": t,
     }
-
 
 def split_events_into_daily_logs(events, trip_start_clock_hour=TRIP_START_CLOCK_HOUR):
     """
